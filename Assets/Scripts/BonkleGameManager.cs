@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using TMPro;
-using System.Linq;
-
 using UnityEngine.SceneManagement;
+
 #if UNITY_EDITOR 
 using UnityEditor;
 #endif
@@ -16,12 +15,16 @@ public class BonkleGameManager : MonoBehaviour
     public List<ScoreData> namesList;
     public int maxScore;
     public string maxScorer;
-    public int maxScore2;
-    public string maxScorer2;
-    public int maxScore3;
-    public string maxScorer3;
+    private int maxScore2;
+    private string maxScorer2;
+    private int maxScore3;
+    private string maxScorer3;
     private string playerID;
     public TMP_InputField inputField;
+    public TMP_Text Scorer1;
+    public TMP_Text Scorer2;
+    public TMP_Text Scorer3;
+
     private void Awake()
     {
         // Awake ensures this is the instance to be shared across scenes and its the only one, plus we initialize a simple list of player+score data
@@ -63,15 +66,14 @@ public class BonkleGameManager : MonoBehaviour
         }
 
         //Here we still need to List highest top scores and names on the glory board
-        Debug.Log(maxScore);
-        Debug.Log(maxScorer);
+        Scorer1.text = $"{maxScorer} : {maxScore}";
+        Scorer2.text = $"{maxScorer2} : {maxScore2}";
+        Scorer3.text = $"{maxScorer3} : {maxScore3}";
     }
 
     public void AddSession(int points)
     {
         namesList.Add(new ScoreData { PlayerScore = points, Player = playerID });
-        Debug.Log(namesList[0].Player);
-        Debug.Log(namesList[1].Player);
     }
 // Begin links to Start button
     public void Begin()
@@ -106,14 +108,15 @@ public void SaveNames()
     {
         Savedata data = new Savedata();    
         data.savedList = Instance.namesList;
+        //Debug.Log(data.savedList[0].PlayerScore);
         string json = JsonUtility.ToJson(data);
-
-        // Here we need to change default directory back to something more generic also
-        File.WriteAllText("C://Alf/Unity Projects" + "/savefile.json", json);
+        //Debug.Log(json);
+        // Saving json copy of savedList in generic directory
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 public void LoadNames()
     {
-        string path = "C://Alf/Unity Projects" + "/savefile.json";
+        string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);

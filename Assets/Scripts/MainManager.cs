@@ -21,11 +21,7 @@ public class MainManager : MonoBehaviour
     {
 
         const float step = 0.6f;
-
-        Debug.Log("Grelber was here four!");
-
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < LineCount; ++i)
         {
@@ -50,7 +46,6 @@ public class MainManager : MonoBehaviour
                 float randomDirection = Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
-
                 Ball.transform.SetParent(null);
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
@@ -78,11 +73,7 @@ public class MainManager : MonoBehaviour
         // This fishes the top score and their owner from the calculation made by this BonkleGameManager instance
     {
         int score = BonkleGameManager.Instance.maxScore;
-        Debug.Log(score);//quick check
-
         string scorer = BonkleGameManager.Instance.maxScorer;
-        Debug.Log(scorer);//ditto
-
         BestPlayer.text = $"BestScore : {scorer} : {score}";
     }
 
@@ -91,5 +82,6 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
         BonkleGameManager.Instance.AddSession(m_Points);
+        BonkleGameManager.Instance.SaveNames();
     }
 }
