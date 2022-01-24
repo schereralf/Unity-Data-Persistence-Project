@@ -9,20 +9,21 @@ public class MainManager : MonoBehaviour
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
-
     public Text ScoreText;
+    public Text BestPlayer;
     public GameObject GameOverText;
-    
     private bool m_Started = false;
     private int m_Points;
-    
     private bool m_GameOver = false;
-
     
     // Start is called before the first frame update
     void Start()
     {
+
         const float step = 0.6f;
+
+        Debug.Log("Grelber was here four!");
+
         int perLine = Mathf.FloorToInt(4.0f / step);
         
         int[] pointCountArray = new [] {1,1,2,2,5,5};
@@ -36,6 +37,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        TrackScores();
     }
 
     private void Update()
@@ -59,6 +61,10 @@ public class MainManager : MonoBehaviour
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                BonkleGameManager.Instance.Exit();
+            }
         }
     }
 
@@ -68,9 +74,22 @@ public class MainManager : MonoBehaviour
         ScoreText.text = $"Score : {m_Points}";
     }
 
+    void TrackScores()
+        // This fishes the top score and their owner from the calculation made by this BonkleGameManager instance
+    {
+        int score = BonkleGameManager.Instance.maxScore;
+        Debug.Log(score);//quick check
+
+        string scorer = BonkleGameManager.Instance.maxScorer;
+        Debug.Log(scorer);//ditto
+
+        BestPlayer.text = $"BestScore : {scorer} : {score}";
+    }
+
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        BonkleGameManager.Instance.AddSession(m_Points);
     }
 }
